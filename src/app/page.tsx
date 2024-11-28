@@ -186,9 +186,12 @@ const CodeEditor: React.FC = () => {
   const [output, setOutput] = useState<string>("> Output will appear here");
   const [copied, setCopied] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-  );
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+
+  useEffect(() => {
+    const darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setIsDarkMode(darkMode);
+  }, []);
 
   const toggleTheme = (): void => {
     const newTheme = !isDarkMode;

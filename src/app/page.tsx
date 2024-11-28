@@ -1,115 +1,127 @@
 "use client";
 
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Copy, Check, Play, Terminal, Sun, Moon } from 'lucide-react';
 import Editor from '@monaco-editor/react';
 import axios from "axios";
 
-const languageMap = {
-    javascript: {
-        language: "javascript",
-        version: "18.15.0",
-        icon: () => (
-            <img
-                src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg"
-                alt="JavaScript"
-                className="w-6 h-6"
-            />
-        ),
-    },
-    typescript: {
-        language: "typescript",
-        version: "5.0.3",
-        icon: () => (
-            <img
-                src="https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg"
-                alt="TypeScript"
-                className="w-6 h-6"
-            />
-        ),
-    },
-    rust: {
-        language: "rust",
-        version: "1.68.2",
-        icon: () => (
-            <img
-                src="https://w7.pngwing.com/pngs/114/914/png-transparent-rust-programming-language-logo-machine-learning-haskell-crab-animals-cartoon-crab.png"
-                alt="Rust"
-                className="w-6 h-6"
-            />
-        ),
-    },
-    cpp: {
-        language: "c++",
-        version: "10.2.0",
-        icon: () => (
-            <img
-                src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg"
-                alt="C++"
-                className="w-6 h-6"
-            />
-        ),
-    },
-    java: {
-        language: "java",
-        version: "15.0.2",
-        icon: () => (
-            <img
-                src="https://banner2.cleanpng.com/20180805/iot/8db265e00790702392f413b6d2f71637.webp"
-                alt="Go"
-                className="w-6 h-6"
-            />
-        ),
-    },
-    php: {
-        language: "php",
-        version: "8.2.3",
-        icon: () => (
-            <img
-                src="https://raw.githubusercontent.com/devicons/devicon/master/icons/php/php-original.svg"
-                alt="PHP"
-                className="w-6 h-6"
-            />
-        ),
-    },
-    csharp: {
-        language: "csharp",
-        version: "6.12.0",
-        icon: () => (
-            <img
-                src="https://raw.githubusercontent.com/devicons/devicon/master/icons/swift/swift-original.svg"
-                alt="Csharp"
-                className="w-6 h-6"
-            />
-        ),
-    },
-    python: {
-        language: "python",
-        version: "3.10.0",
-        icon: () => (
-            <img
-                src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg"
-                alt="Python"
-                className="w-6 h-6"
-            />
-        ),
-    },
+// Define types for language data
+interface LanguageData {
+  language: string;
+  version: string;
+  icon: () => JSX.Element;
+}
+
+// Define type for the `languageMap` object
+interface LanguageMap {
+  [key: string]: LanguageData;
+}
+
+const languageMap: LanguageMap = {
+  javascript: {
+    language: "javascript",
+    version: "18.15.0",
+    icon: () => (
+      <img
+        src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg"
+        alt="JavaScript"
+        className="rounded-full	object-cover object-bottom w-6 h-6"
+      />
+    ),
+  },
+  typescript: {
+    language: "typescript",
+    version: "5.0.3",
+    icon: () => (
+      <img
+        src="https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg"
+        alt="TypeScript"
+        className="rounded-full object-cover object-bottom w-6 h-6"
+      />
+    ),
+  },
+  rust: {
+    language: "rust",
+    version: "1.68.2",
+    icon: () => (
+      <img
+        src="https://w7.pngwing.com/pngs/114/914/png-transparent-rust-programming-language-logo-machine-learning-haskell-crab-animals-cartoon-crab.png"
+        alt="Rust"
+        className="rounded-full object-cover object-bottom w-6 h-6"
+      />
+    ),
+  },
+  c: {
+    language: "c",
+    version: "10.2.0",
+    icon: () => (
+      <img
+        src="https://w7.pngwing.com/pngs/724/306/png-transparent-c-logo-c-programming-language-icon-letter-c-blue-logo-computer-program-thumbnail.png"
+        alt="C"
+        className="rounded-full object-cover object-bottom w-6 h-6"
+      />
+    ),
+  },
+  java: {
+    language: "java",
+    version: "15.0.2",
+    icon: () => (
+      <img
+        src="https://banner2.cleanpng.com/20180805/iot/8db265e00790702392f413b6d2f71637.webp"
+        alt="Go"
+        className="rounded-full object-cover object-bottom w-6 h-6"
+      />
+    ),
+  },
+  php: {
+    language: "php",
+    version: "8.2.3",
+    icon: () => (
+      <img
+        src="https://raw.githubusercontent.com/devicons/devicon/master/icons/php/php-original.svg"
+        alt="PHP"
+        className="rounded-full object-cover object-bottom w-6 h-6"
+      />
+    ),
+  },
+  csharp: {
+    language: "csharp",
+    version: "6.12.0",
+    icon: () => (
+      <img
+        src="https://raw.githubusercontent.com/devicons/devicon/master/icons/swift/swift-original.svg"
+        alt="Csharp"
+        className="rounded-full object-cover object-bottom w-6 h-6"
+      />
+    ),
+  },
+  python: {
+    language: "python",
+    version: "3.10.0",
+    icon: () => (
+      <img
+        src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg"
+        alt="Python"
+        className="rounded-full object-cover object-bottom w-6 h-6"
+      />
+    ),
+  },
 };
 
-const defaultCodes = {
-  javascript: `
+const defaultCodes: { [key: string]: string } = {
+  javascript:` 
 // JavaScript Hello World
 // Edit the code below and click 'Run' to execute
 
 console.log("Hello, JavaScript!");`,
   
-  typescript: `
+  typescript:` 
 // TypeScript Hello World
 // Modify the code and press 'Run' to see the output
 
 console.log("Hello, TypeScript!");`,
   
-  rust: `
+  rust:` 
 // Rust Hello World Program
 // Change the code and click 'Run' to execute
 
@@ -117,18 +129,20 @@ fn main() {
   println!("Hello, Rust!");
 }`,
   
-  cpp: `
-// C++ Hello World Program
+  c: `
+// C Hello World Program
 // Edit the code and press 'Run' to see the result
 
-#include <iostream>
+#include <stdio.h>
 
 int main() {
-  std::cout << "Hello, C++!" << std::endl;
-  return 0;
+
+    printf("Hello World");
+
+    return 0;
 }`,
   
-  java: `
+  java:` 
 // Java Hello World Class
 // Modify the code and click 'Run' to execute
 
@@ -146,7 +160,7 @@ public class HelloWorld {
 echo "Hello, PHP!";
 ?>`,
   
-  csharp: `
+  csharp:` 
 // C# Hello World Program
 // Change the code and click 'Run' to execute
 
@@ -158,26 +172,25 @@ class HelloWorld {
   }
 }`,
   
-  python: `
+  python:` 
 # Python Hello World
 # Edit the code and press 'Run' to see the output
 
 print("Hello, Python!")`,
+
 };
 
-
-const CodeEditor = () => {
-  const [selectedLang, setSelectedLang] = useState("python");
-  const [code, setCode] = useState(defaultCodes[selectedLang]);
-  const [output, setOutput] = useState("> Output will appear here");
-  const [copied, setCopied] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(
+const CodeEditor: React.FC = () => {
+  const [selectedLang, setSelectedLang] = useState<string>("python");
+  const [code, setCode] = useState<string>(defaultCodes[selectedLang]);
+  const [output, setOutput] = useState<string>("> Output will appear here");
+  const [copied, setCopied] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(
     window.matchMedia("(prefers-color-scheme: dark)").matches
   );
 
-  // Theme toggle logic
-  const toggleTheme = () => {
+  const toggleTheme = (): void => {
     const newTheme = !isDarkMode;
     setIsDarkMode(newTheme);
     localStorage.setItem("codeEditorTheme", newTheme ? "dark" : "light");
@@ -190,13 +203,13 @@ const CodeEditor = () => {
     }
   }, []);
 
-  const handleLanguageChange = (lang) => {
+  const handleLanguageChange = (lang: string): void => {
     setSelectedLang(lang);
     setCode(defaultCodes[lang]);
     setOutput("> Output will appear here");
   };
 
-  const executeCode = async () => {
+  const executeCode = async (): Promise<void> => {
     setIsLoading(true);
     try {
       const data = {
@@ -206,10 +219,7 @@ const CodeEditor = () => {
         stdin: "",
       };
 
-      const response = await axios.post(
-        "https://emkc.org/api/v2/piston/execute",
-        data
-      );
+      const response = await axios.post("https://emkc.org/api/v2/piston/execute", data);
 
       if (response.data.run.output) {
         setOutput("> " + response.data.run.output.replace(/\n/g, "\n> "));
@@ -218,18 +228,22 @@ const CodeEditor = () => {
       } else {
         setOutput("> Program executed successfully with no output");
       }
-    } catch (error) {
+    } catch (error: any) {
       setOutput(`Error: ${error.message}`);
       console.log("Error", error);
     }
     setIsLoading(false);
   };
 
-  const copyCode = async () => {
+  const copyCode = async (): Promise<void> => {
     await navigator.clipboard.writeText(code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  function capitalizeFirstLetter(string: string): string {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
   return (
     <div
@@ -292,7 +306,7 @@ const CodeEditor = () => {
                     isDarkMode ? "text-gray-300" : "text-gray-700"
                   }`}
                 >
-                  {selectedLang} ({languageMap[selectedLang].version})
+                  {capitalizeFirstLetter(selectedLang)} ({languageMap[selectedLang].version})
                 </span>
                 <button
                   onClick={copyCode}
@@ -332,7 +346,7 @@ const CodeEditor = () => {
 
             {/* Code Editor */}
             <Editor
-              language={languageMap[selectedLang].monacoLanguage}
+              language={languageMap[selectedLang]?.language}
               theme={isDarkMode ? "vs-dark" : "light"}  // Use default Monaco themes
               value={code}
               onChange={(value) => setCode(value || "")}
@@ -383,6 +397,5 @@ const CodeEditor = () => {
     </div>
   );
 };
-
 
 export default CodeEditor;
